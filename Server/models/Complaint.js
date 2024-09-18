@@ -1,5 +1,5 @@
 const mongoose=require("mongoose");
-const complaintSchema=new mongoose({
+const complaintSchema=new mongoose.Schema({
     firstName:{
         type:String,
         required:true
@@ -24,6 +24,7 @@ const complaintSchema=new mongoose({
     },
     status:{
         type:Boolean,
+        default:"false",
     }
 })
 
