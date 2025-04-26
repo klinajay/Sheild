@@ -1,5 +1,4 @@
-import { useComplaint } from "../../contextApi/complaintContextApi.jsx";
-
+import { useNavigate } from 'react-router-dom';
 import {
     Card,
     CardContent,
@@ -9,53 +8,17 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Button } from './button';
-import { useNavigate } from 'react-router-dom';
 
-export default function ComplaintCard({ complaintData }) {
+export default function ComplaintCard({ complaintData, onMarkRead, onMarkProcessed }) {
     const navigate = useNavigate(); // Initialize the navigate function
 
-    // Function to handle the click event
+    // Function to handle the click event for viewing details
     const viewDetails = async() => {
-       if(complaintData?.status != "read" ){
-        try {
-            const response = await fetch("http://localhost:4000/api/police/markRead", {
-            method: "POST",
-            headers : {
-              "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({_id : complaintData._id})
-          })
-          if(!response.ok) {
-            alert("Error while marking as read !")
-          }
-        //   alert("Marked as processed")
-        } catch (error) {
-          console.log("Error mark as processed", error.message);
-          
+        if (complaintData?.status !== "read") {
+            onMarkRead(complaintData._id);  // Use a prop function to mark as read
         }
-       }
-       useComplaint();
-        navigate(`/complaintDetails/${complaintData._id}`); // Navigate to the complaint details page with the specific ID
+        navigate(`/complaintDetails/${complaintData._id}`);  // Navigate to the complaint details page
     };
-
-    const markProcessed = async() => {
-      try {
-          const response = await fetch("http://localhost:4000/api/police/markProcessed", {
-          method: "POST",
-          headers : {
-            "Content-Type" : "application/json"
-          },
-          body : JSON.stringify({_id : complaintData._id})
-        })
-        if(!response.ok) {
-          alert("Error while marking as processed !")
-        }
-        alert("Marked as processed")
-      } catch (error) {
-        console.log("Error mark as processed", error.message);
-        
-      }
-    }
 
     return (
         <div>
@@ -74,7 +37,11 @@ export default function ComplaintCard({ complaintData }) {
                     >
                         View Details
                     </Button>
-                    <Button  className='rounded-full bg-purple-700 text-white hover:bg-white hover:text-purple-700' disabled={complaintData?.status === "processed"}  onClick = {markProcessed}>
+                    <Button 
+                        className='rounded-full bg-purple-700 text-white hover:bg-white hover:text-purple-700'
+                        disabled={complaintData?.status === "processed"}
+                        onClick={() => onMarkProcessed(complaintData._id)} // Use prop for marking as processed
+                    >
                         Mark as processed
                     </Button>
                 </CardFooter>

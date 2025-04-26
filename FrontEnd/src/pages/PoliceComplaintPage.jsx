@@ -1,67 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from "../components/ui/button";
 import ComplaintCard from '../components/ui/ComplaintCard';
-import { useId } from 'react';
 import { useComplaint } from '../contextApi/complaintContextApi';
 
 export default function PoliceComplaintPage() {
-  const [complaintData , setComplaintData] = useState([])
-  const {complaints , setComplaints} = useComplaint()
-  // const navigate = useNavigate();
+  const [complaintData, setComplaintData] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('Unread'); // Default filter
+  const { complaints } = useComplaint();
+
   useEffect(() => {
-    setComplaintData(complaints)
-  },[complaints])
-  function viewComplaint(id) {
-    console.log(id);
-    
-    navigate(`/complaintDetails/${id}`)
-  }
-  
-  function unreadComplaints() {
-    var unread = complaints.filter(complaint => complaint.status === "unread");
-    setComplaintData(unread);
-  }
+    setComplaintData(complaints);
+  }, [complaints]);
 
-  function readComplaints() {
-    var read = complaints.filter(complaint => complaint.status === "read");
-    setComplaintData(read);
-  }
-
-  function processedComplaints() {
-    var processed = complaints.filter(complaint => complaint.status === "processed");
-    setComplaintData(processed);
-  }
+  // Filter complaints based on status
+  const filteredComplaints = complaintData.filter((comp) => {
+    if (filterStatus === 'Unread') return comp.status === 'unread';
+    if (filterStatus === 'Read') return comp.status === 'read';
+    if (filterStatus === 'Processed') return comp.status === 'processed';
+    return true; // If no filter, return all
+  });
 
   return (
     <div className="flex h-screen w-full">
       {/* Sidebar */}
       <div className="w-[300px] bg-purple-300 p-5 text-white hidden md:block">
-        <h2 className="text-2xl font-bold mb-4">Status</h2>
-        <ul>
-          <Button className='bg-purple-700 py-4 px-8 font-bold hover:text-purple-700 hover:bg-white w-full' onClick = {unreadComplaints} >Unread</Button>
-          <br />
-          <Button className='bg-purple-700 py-4 px-10 mt-5 font-bold hover:text-purple-700 hover:bg-white w-full'  onClick = {readComplaints}>Read</Button>
-          <br />
-          <Button className='bg-purple-700 py-4 px-6 mt-5 font-bold hover:text-purple-700 hover:bg-white w-full'  onClick = {processedComplaints}>Processed</Button>
-        </ul>
+        <h2 className="text-xl font-semibold mb-8">Police Dashboard</h2>
+        
+        <Button
+          className={`w-full mb-4 ${filterStatus === 'Unread' ? 'bg-white text-purple-700' : 'bg-purple-500'}`}
+          onClick={() => setFilterStatus('Unread')}
+        >
+          Unread Complaints
+        </Button>
+        <Button
+          className={`w-full mb-4 ${filterStatus === 'Read' ? 'bg-white text-purple-700' : 'bg-purple-500'}`}
+          onClick={() => setFilterStatus('Read')}
+        >
+          Read Complaints
+        </Button>
+        <Button
+          className={`w-full ${filterStatus === 'Processed' ? 'bg-white text-purple-700' : 'bg-purple-500'}`}
+          onClick={() => setFilterStatus('Processed')}
+        >
+          Processed Complaints
+        </Button>
       </div>
 
-      {/* Main content */}
+      {/* Main Content */}
       <div className="flex-1 bg-gray-100 p-5 overflow-auto">
-        <h2 className="text-2xl font-bold mb-4">Complaints</h2>
+        <h2 className="text-2xl font-bold mb-4">{filterStatus} Complaints</h2>
 
-        {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Add Cards Dynamically */}
-          
-          {complaintData.length > 0 ? (
-            complaintData.map((comp) => (
-              <ComplaintCard complaintData={comp} viewComplaint={viewComplaint} key={comp._id} />
+          {filteredComplaints.length > 0 ? (
+            filteredComplaints.map((comp) => (
+              <ComplaintCard key={comp._id} complaintData={comp} />
             ))
           ) : (
-            <p>No complaints found</p>
+            <p>No {filterStatus.toLowerCase()} complaints found.</p>
           )}
-          {/* More Complaint Cards can be added here */}
         </div>
       </div>
     </div>
