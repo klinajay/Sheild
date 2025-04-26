@@ -1,4 +1,4 @@
-import { useComplaint } from "../../../contextApi/complaintContextApi.jsx";
+import { useComplaint } from "../../contextApi/complaintContextApi.jsx";
 
 import {
     Card,
@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from './button';
 import { useNavigate } from 'react-router-dom';
-import { Complaint } from '../../../../server/models/Complaint';
 
 export default function ComplaintCard({ complaintData }) {
     const navigate = useNavigate(); // Initialize the navigate function
