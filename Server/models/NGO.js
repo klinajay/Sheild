@@ -22,6 +22,9 @@ const NGOSchema=new mongoose.Schema({
         ref:"Notification"
     }]
 
+},
+{
+    timestamps : true
 })
 
 

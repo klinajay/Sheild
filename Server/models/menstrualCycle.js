@@ -14,6 +14,9 @@ const menstrualCycleSchema=new mongoose.Schema({
     status:{
         type:Boolean
     }
+},
+{
+    timestamps : true
 })
 
 module.exports=mongoose.model("menstrualCycle",menstrualCycleSchema);

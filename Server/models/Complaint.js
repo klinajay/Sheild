@@ -1,16 +1,12 @@
-const mongoose=require("mongoose");
+import mongoose from "mongoose";
 const complaintSchema=new mongoose.Schema({
-    firstName:{
-        type:String,
-        required:true
+    location : {
+        type : String,
+        required : true
     },
-    lastName:{
-        type:String,
-        required:true
-    },
-    address:{
-        type:String,
-        required:true
+    Title: {
+        type: String,
+        required: true
     },
     Reason:{
         type:String,
@@ -23,9 +19,22 @@ const complaintSchema=new mongoose.Schema({
         type:Date,
     },
     status:{
-        type:Boolean,
-        default:"false",
+        type:String,
+        enum: ['unread', 'read', 'processed'],
+        default:"unread",
+    },
+    victimId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
+    policeStationId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref:"Police"
     }
+},
+{
+    timestamps : true
 })
 
-module.exports=mongoose.model("Complaint",complaintSchema);
+const Complaint=mongoose.model("Complaint",complaintSchema);
+export {Complaint}

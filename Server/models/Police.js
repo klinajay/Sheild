@@ -1,11 +1,27 @@
-const express=require("express");
-const mongoose=require("mongoose");
+import express from "express"
+import mongoose from "mongoose"
 const PoliceSchema=new mongoose.Schema({
-    registrationNo:{
-        type:String,
-        required:true
+    
+    stationName: {
+        type: String,
+        required: true,
     },
-    Location:
+    officerInCharge: {
+        type: String,
+    },        
+    city : {
+        type:String,
+        required:true,
+    },
+    state : {
+        type : String,
+        required : true
+    },
+    district : {
+        type : String,
+        required : true
+    },
+    location:
     {
         type:String,
         required:true,
@@ -14,10 +30,21 @@ const PoliceSchema=new mongoose.Schema({
         type:String,
         require:true
     },
-    Complaint:[{
+    email : {
+        type : String,
+        required : true
+    },
+    complaints:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Complaint"
-    }]
+    }],
+    pincode : {
+        type : String
+    }
+},
+{
+    timestamps : true
 })
 
-module.exports=mongoose.model("Police",PoliceSchema);
+const Police = mongoose.model("Police",PoliceSchema)
+export  {Police}

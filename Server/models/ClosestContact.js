@@ -14,6 +14,9 @@ const ClosestContactSchema=new mongoose.Schema({
         required:true,
     }
 
+},
+{
+    timestamps : true
 })
 
 
